@@ -29,7 +29,9 @@ import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.OkHttpClient;
 import okhttp3.Response;
+import okhttp3.Request;
 
 public class ChooseAreaFragment extends Fragment {
     public static final int LEVEL_PROVINCE = 0;
@@ -158,24 +160,12 @@ public class ChooseAreaFragment extends Fragment {
 
     //服务器获取数据
     private void queryFromServer(String url, final String type){
-        System.out.println("url:"+url);
         showProgressDialog();
         HttpUtil.sendOkHttpRequest(url, new Callback() {
             @Override
-            public void onFailure(Call call, IOException e) {
-                //通过runOnUiThread()方法回到主线程
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        closeProgressDialog();
-                        Toast.makeText(getContext(),"加载失败", Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
-
-            @Override
             public void onResponse(Call call, Response response) throws IOException {
-                String responseText = response.body().toString();
+                String responseText = response.body().string();
+                Log.d("responseText: ", response.body().toString());
                 boolean result = false;
                 if("province".equals(type)){
                     result = Utility.handleProvinceResponse(responseText);
@@ -199,6 +189,19 @@ public class ChooseAreaFragment extends Fragment {
                         }
                     });
                 }
+            }
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.d("failure: ", "failure");
+                //通过runOnUiThread()方法回到主线程
+                e.printStackTrace();
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        closeProgressDialog();
+                        Toast.makeText(getContext(),"加载失败123", Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
         });
     }
