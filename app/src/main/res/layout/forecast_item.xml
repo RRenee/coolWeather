@@ -33,7 +33,7 @@
     <TextView
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:id="@+id/mine_text"
+        android:id="@+id/min_text"
         android:layout_gravity="center"
         android:layout_weight="1"
         android:gravity="right"

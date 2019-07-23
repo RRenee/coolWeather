@@ -2,6 +2,7 @@ package com.example.renee.helloworld;
 
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -18,6 +19,7 @@ import android.widget.Toast;
 import com.example.renee.helloworld.db.City;
 import com.example.renee.helloworld.db.County;
 import com.example.renee.helloworld.db.Province;
+import com.example.renee.helloworld.gson.Weather;
 import com.example.renee.helloworld.util.HttpUtil;
 import com.example.renee.helloworld.util.Utility;
 
@@ -29,9 +31,7 @@ import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.Callback;
-import okhttp3.OkHttpClient;
 import okhttp3.Response;
-import okhttp3.Request;
 
 public class ChooseAreaFragment extends Fragment {
     public static final int LEVEL_PROVINCE = 0;
@@ -82,6 +82,20 @@ public class ChooseAreaFragment extends Fragment {
                 }else if (currentLevel == LEVEL_CITY){
                     selectedCity = cityList.get(position);
                     queryCounties();
+                }else if(currentLevel == LEVEL_COUNTY){
+                    String weatherId = countyList.get(position).getWeatherID();
+                    if(getActivity() instanceof  MainActivity){
+                        Intent intent  = new Intent(getActivity(), WeatherActivity.class);
+                        intent.putExtra("weather_id",weatherId);
+                        startActivity(intent);
+                        getActivity().finish();
+                    }else if(getActivity() instanceof WeatherActivity){
+                        WeatherActivity weatherActivity = (WeatherActivity) getActivity();
+                        weatherActivity.drawerLayout.closeDrawers();
+                        weatherActivity.swipeRefreshLayout.setRefreshing(true);
+                        weatherActivity.requestWeather(weatherId);
+
+                    }
                 }
             }
         });
