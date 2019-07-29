@@ -95,7 +95,7 @@ public class WeatherActivity extends AppCompatActivity {
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         String weatherString = preferences.getString("weather",null);
-        Log.e("renee", weatherString);
+       // Log.e("renee", weatherString);
         if(weatherString != null){
             //缓存数据
             Weather weather = Utility.handleWeatherResponse(weatherString);
